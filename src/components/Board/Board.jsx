@@ -12,13 +12,16 @@ const DEFAULT_QUERY = 'mountain';
 
 
 
-function Board() {
+export default function Board() {
     const [data, setData] = useState([])
     const [queryInput, setQueryInput] = useState("");
     const [query, setQuery] = useState(DEFAULT_QUERY);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    let imageSelectedRef = useRef({});
   
+    console.log("Images selected: ", imageSelectedRef.current);
+
     // set up an effect to fetch data using the API on every rendering of App component
     useEffect( () => {
       let didCancel = false;
@@ -41,11 +44,20 @@ function Board() {
         try {
           const response = await axios.get(url, options); 
           // store the data received from API call in component state
-          if (!didCancel) setData(response.data.results);
-          console.log("Received data: ", response.data)  
+          if (!didCancel) {
+            const images = response.data.results; 
+            setData(images);
+            console.log("Received data: ", response.data)
+            images.forEach(item => {
+              imageSelectedRef.current[item.id] = false;
+            });
+
+        }  
         } catch (error) {
-          if (!didCancel) setIsError(true);
-          console.log("API call failed. Error: ", error)  
+          if (!didCancel) {
+            setIsError(true);
+            console.log("API call failed. Error: ", error);
+          }  
         }
   
         // disable setLoading state after data received
@@ -72,6 +84,16 @@ function Board() {
     const handleChange = (e) => {
       setQueryInput(e.target.value);
     };
+
+    const handleImageClick = (item, index) => {
+      console.log(`Clicked on image#${index} with id ${item.id}`);
+      imageSelectedRef.current[item.id] = true;
+      console.log("Images selected: ", imageSelectedRef.current);
+
+      // shuffle the images
+      shuffle(data);
+      setData([...data]);
+    };
   
     
     return (
@@ -89,10 +111,10 @@ function Board() {
             <h4>Images Found for: "{query}"</h4>
             <ul>
               {isLoading? (<div>Loading...</div>):
-              (data.map( (item) => 
+              (data.map( (item, index) => 
                 (<li key={item.id}>
                   <div className="card">
-                    <img src={item.urls.small} /> 
+                    <img src={item.urls.small} onClick={(event) => {handleImageClick(item, index)}}/> 
                   </div>
                 </li>)
               ))}
@@ -105,4 +127,32 @@ function Board() {
 }
 
 
-export default Board;
+// helper function for random shuffling of images array
+function shuffle(array) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
