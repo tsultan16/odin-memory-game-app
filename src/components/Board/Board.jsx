@@ -18,9 +18,11 @@ export default function Board() {
     const [query, setQuery] = useState(DEFAULT_QUERY);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [currentScore, setCurrentScore] = useState(0);
+    const [bestScore, setBestScore] = useState(0);
     let imageSelectedRef = useRef({});
-  
-    console.log("Images selected: ", imageSelectedRef.current);
+    
+    // console.log("Images selected: ", imageSelectedRef.current);
 
     // set up an effect to fetch data using the API on every rendering of App component
     useEffect( () => {
@@ -47,7 +49,7 @@ export default function Board() {
           if (!didCancel) {
             const images = response.data.results; 
             setData(images);
-            console.log("Received data: ", response.data)
+            // console.log("Received data: ", response.data)
             images.forEach(item => {
               imageSelectedRef.current[item.id] = false;
             });
@@ -87,8 +89,21 @@ export default function Board() {
 
     const handleImageClick = (item, index) => {
       console.log(`Clicked on image#${index} with id ${item.id}`);
-      imageSelectedRef.current[item.id] = true;
-      console.log("Images selected: ", imageSelectedRef.current);
+      
+      // reset game if this image has already been selected
+      if (imageSelectedRef.current[item.id]) {
+        setBestScore(Math.max(bestScore, currentScore));
+        setCurrentScore(0);
+        for (let id in imageSelectedRef.current){
+          imageSelectedRef.current[id] = false;
+        }
+        console.log("Game over!");
+      } else {
+        setCurrentScore(currentScore+1);
+        imageSelectedRef.current[item.id] = true;
+      }
+      
+      // console.log("Images selected: ", imageSelectedRef.current);
 
       // shuffle the images
       shuffle(data);
@@ -108,7 +123,8 @@ export default function Board() {
   
         {isError ? (<div>Oops... something went wrong.</div>):
           ( <>
-            <h4>Images Found for: "{query}"</h4>
+            <h4>Current Score - {currentScore}</h4>
+            <h4>Best Score - {bestScore}</h4>
             <ul>
               {isLoading? (<div>Loading...</div>):
               (data.map( (item, index) => 
