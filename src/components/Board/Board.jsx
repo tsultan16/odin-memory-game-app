@@ -53,6 +53,9 @@ export default function Board() {
             images.forEach(item => {
               imageSelectedRef.current[item.id] = false;
             });
+            // reset scores for new set of images
+            setCurrentScore(0);
+            setBestScore(0);
 
         }  
         } catch (error) {
@@ -88,7 +91,7 @@ export default function Board() {
     };
 
     const handleImageClick = (item, index) => {
-      console.log(`Clicked on image#${index} with id ${item.id}`);
+      // console.log(`Clicked on image#${index} with id ${item.id}`);
       
       // reset game if this image has already been selected
       if (imageSelectedRef.current[item.id]) {

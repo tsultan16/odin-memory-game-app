@@ -16,6 +16,14 @@ input {
     padding: 0.5em 1em;
 }
 
+input:focus,
+input:focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: 0 0 3px 3px aquamarine;
+}
+
+
 .scores {
     padding: 2em 0;
     display: flex;
