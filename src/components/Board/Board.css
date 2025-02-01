@@ -2,14 +2,33 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
+
+form {
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+input {
+    padding: 0.5em 1em;
+}
+
+.scores {
+    padding: 2em 0;
+    display: flex;
+    justify-content: space-between;
+}
+
 
 ul {
     list-style-type: none;
   
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 2em;
 }
 
@@ -18,11 +37,13 @@ li {
     justify-content: center;
 }
   
-
 .card {
     height: 8em;
     width: 8em;
     overflow: hidden;
+
+    transition: border-color 0.25s;
+    transition: box-shadow 0.25s;
 }
   
 .card img {
@@ -31,3 +52,19 @@ li {
     object-fit: cover;
     object-position: center;
 }
+
+
+.card:hover {
+    cursor: pointer;
+    border-color: #ecedff;
+    box-shadow: 0 0 3px 3px aquamarine;
+}
+
+
+
+
+
+
+
+
+

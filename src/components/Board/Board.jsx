@@ -114,17 +114,21 @@ export default function Board() {
     return (
       <>
         <form onSubmit={handleSubmit}>
-          <label>
-            Enter Search Query: 
-            <input type="text" name="search" id="search" onChange={handleChange} value={queryInput} />
+          <label> 
+            <input type="text" name="search" id="search" onChange={handleChange} value={queryInput} placeholder="search for images" />
           </label>
           <button type="submit">Submit</button>
         </form>
   
         {isError ? (<div>Oops... something went wrong.</div>):
           ( <>
-            <h4>Current Score - {currentScore}</h4>
-            <h4>Best Score - {bestScore}</h4>
+            <div className="scores">
+              <p>Click an image to get points, but don't click the same one twice!</p>
+              <div>
+                <h4>Current Score - {currentScore}</h4>
+                <h4>Best Score - {bestScore}</h4>
+              </div>
+            </div>
             <ul>
               {isLoading? (<div>Loading...</div>):
               (data.map( (item, index) => 
